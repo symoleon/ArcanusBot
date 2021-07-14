@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'ping',
 	category: 'Utility',
-	descritpion: 'Ping!',
+	description: 'Ping!',
 	usage: '',
 	permission: '',
 	execute(message) {
