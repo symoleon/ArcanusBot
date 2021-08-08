@@ -2,9 +2,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs');
 const Discord = require('discord.js');
+const Arcanus = require('nodearcanusapilib');
 const config = require('./config.json');
 
 const client = new Discord.Client();
+client.arcanusClient = new Arcanus.APIClient('https://dev.symoleon.pl/arcanus/api', 's9vjEq0BgmPtye8UURjjlGPrAQbsBEL3j1qIu9atK6vfKe469XmgDrpTQ0e7lWTh');
 client.commands = new Discord.Collection();
 
 const commandCategories = fs.readdirSync('./commands', { withFileTypes: true }).filter(file => file.isDirectory());
