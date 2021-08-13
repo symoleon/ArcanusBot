@@ -33,7 +33,7 @@ module.exports = {
 			}
 		} else {
 			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription('Provide additional arguments or use `help warn` command.');
+			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
 		message.channel.send(messageEmbed);
 	},
