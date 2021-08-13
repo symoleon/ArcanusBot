@@ -6,6 +6,8 @@ module.exports = {
 	description: 'List all warnings of you or given person',
 	usage: '[user]',
 	permissions: '',
+	guildOnly: true,
+	adminOnly: false,
 	async execute(message, commandArguments) {
 		const messageEmbed = new Discord.MessageEmbed();
 		let member = null;

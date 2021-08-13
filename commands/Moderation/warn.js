@@ -1,10 +1,13 @@
 const Discord = require('discord.js');
+
 module.exports = {
 	name: 'warn',
 	category: 'Moderation',
 	description: 'Warn an user',
 	usage: '<user> <description>',
 	permission: '',
+	guildOnly: true,
+	adminOnly: true,
 	async execute(message, commandArguments) {
 		const messageEmbed = new Discord.MessageEmbed();
 		if (commandArguments.length >= 2) {

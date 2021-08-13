@@ -6,6 +6,8 @@ module.exports = {
 	description: 'Delete user\'s warning',
 	usage: '<user> <warningId>',
 	permissions: '',
+	guildOnly: true,
+	adminOnly: true,
 	async execute(message, commandArguments) {
 		const messageEmbed = new Discord.MessageEmbed();
 		if (commandArguments.length >= 2) {

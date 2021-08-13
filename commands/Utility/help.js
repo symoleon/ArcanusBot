@@ -7,6 +7,7 @@ module.exports = {
 	usage: '[command name]',
 	permissions: '',
 	guildOnly: false,
+	adminOnly: false,
 	execute(message, commandArguments) {
 		const embed = new Discord.MessageEmbed();
 		const { commands } = message.client;
