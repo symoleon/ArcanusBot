@@ -33,10 +33,13 @@ module.exports = {
 					return;
 				}
 			}
-			client.commands.get(command).execute(message, commandArguments);
+			await client.commands.get(command).execute(message, commandArguments);
 		} catch (error) {
 			console.log(error);
-			message.channel.send('There was an error during execution of this command!');
+			const embed = new Discord.MessageEmbed();
+			embed.setTitle('Error');
+			embed.setDescription('There was an error during execution of this command!');
+			message.channel.send(embed);
 		}
 	},
 };
