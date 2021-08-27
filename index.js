@@ -6,7 +6,7 @@ const Arcanus = require('nodearcanusapilib');
 const config = require('./config.json');
 
 const client = new Discord.Client();
-client.arcanusClient = new Arcanus.APIClient('https://dev.symoleon.pl/arcanus/api', 's9vjEq0BgmPtye8UURjjlGPrAQbsBEL3j1qIu9atK6vfKe469XmgDrpTQ0e7lWTh');
+client.arcanusClient = new Arcanus.APIClient('https://dev.symoleon.pl/arcanus/api', process.env.ARCANUS_TOKEN);
 client.commands = new Discord.Collection();
 
 const commandCategories = fs.readdirSync('./commands', { withFileTypes: true }).filter(file => file.isDirectory());
