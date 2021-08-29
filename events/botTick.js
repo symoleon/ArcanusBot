@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'tenSeconds',
+	name: 'botTick',
 	once: false,
 	async execute(config, client) {
 		try {
