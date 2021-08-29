@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'botTick',
+	name: 'bump',
 	once: false,
 	async execute(message, config, client) {
 		const date = new Date();
