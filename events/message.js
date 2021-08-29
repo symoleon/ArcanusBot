@@ -4,6 +4,9 @@ module.exports = {
 	name: 'message',
 	once: false,
 	async execute(message, config, client) {
+		if (message.author.id == '302050872383242240' && message.embeds[0].description.match('Podbito serwer') != null) {
+			client.emit('bump', message);
+		}
 		if (!(message.content.startsWith(config.botMention) || message.content.startsWith(config.prefix) || message.content.startsWith(config.botMentionWithExclamationMark)) || message.author.bot) return;
 
 		const commandContent = message.content.replace(config.botMention, '').replace(config.botMentionWithExclamationMark, '').replace(config.prefix, '').trim();
@@ -40,9 +43,6 @@ module.exports = {
 			embed.setTitle('Error');
 			embed.setDescription('There was an error during execution of this command!');
 			message.channel.send(embed);
-		}
-		if (message.author.id == '302050872383242240' && message.embeds[0].description.match('Podbito serwer') != null) {
-			client.emit('bump', message);
 		}
 	},
 };

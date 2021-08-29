@@ -14,8 +14,7 @@ module.exports = {
 		if (minuta < 10) {
 			minuta = '0' + minuta.toString();
 		}
-		const embed = new Discord.MessageEmbed().setDescription('Next bump will be available after ' + godzina + ':' + minuta + '.');
-		embed.setFooter(`From ${client.user.username}`);
+		const embed = new Discord.MessageEmbed().setDescription(`${client.user.username} predicts, that the next bump will be available after ${godzina}:${minuta}.`);
 		message.channel.send(embed);
 	},
 };
