@@ -19,6 +19,8 @@ module.exports = {
 				const arcanusGuildMember = await arcanusGuild.getMember(member.id);
 				if (arcanusGuildMember.muteId) {
 					await arcanusGuild.mutesManager.delete(arcanusGuildMember.muteId);
+					const role = await message.guild.roles.fetch(arcanusGuild.mute_role_id.toString());
+					await member.roles.remove(role);
 					if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
 						const logEmbed = new Discord.MessageEmbed();
 						logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
