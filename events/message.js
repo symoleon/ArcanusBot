@@ -41,5 +41,8 @@ module.exports = {
 			embed.setDescription('There was an error during execution of this command!');
 			message.channel.send(embed);
 		}
+		if (message.author.id == '302050872383242240' && message.embeds[0].description.match('Podbito serwer') != null) {
+			client.emit('bump', message);
+		}
 	},
 };
