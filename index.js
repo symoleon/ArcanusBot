@@ -37,6 +37,6 @@ for (const file of eventFiles) {
 
 client.setInterval(() => {
 	client.emit('botTick');
-}, 1000);
+}, 5000);
 
 client.login(process.env.TOKEN);
