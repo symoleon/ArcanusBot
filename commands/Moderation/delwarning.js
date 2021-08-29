@@ -18,7 +18,16 @@ module.exports = {
 				const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
 				const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
 				if (arcanusGuildMember.warningsManager.warningsIds.indexOf(warningId) != -1) {
+					const warning = await arcanusGuildMember.warningsManager.fetch(warningId);
 					await arcanusGuildMember.warningsManager.delete(warningId);
+					if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
+						const logEmbed = new Discord.MessageEmbed();
+						logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
+						logEmbed.setDescription(`**Deleted warning:** ${warning.description} (${warning.id})\n**From:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!`);
+						logEmbed.setThumbnail(member.user.avatarURL());
+
+						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+					}
 					messageEmbed.setTitle('Warning deleted!');
 					messageEmbed.setDescription(`Warning with ID \`${warningId}\` has been deleted!`);
 				} else {

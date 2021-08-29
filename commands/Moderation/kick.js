@@ -18,6 +18,15 @@ module.exports = {
 				await member.kick(kickReason);
 				messageEmbed.setTitle('Kicked!');
 				messageEmbed.setDescription(`Kicked user \`${member.user.username}\` for \`${kickReason}\``);
+				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
+				if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
+					const logEmbed = new Discord.MessageEmbed();
+					logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
+					logEmbed.setDescription(`**Kicked:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${kickReason}`);
+					logEmbed.setThumbnail(member.user.avatarURL());
+
+					message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+				}
 			} catch (error) {
 				if (error.code == 10013) {
 					messageEmbed.setTitle('Invalid user!');
