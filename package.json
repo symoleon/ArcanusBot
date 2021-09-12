@@ -1,5 +1,5 @@
 {
-  "name": "devkopulabot",
+  "name": "kopulabot",
   "version": "1.0.0",
   "description": "Wersja deweloperska KopułaBota",
   "main": "index.js",
@@ -9,12 +9,12 @@
   "author": "",
   "license": "ISC",
   "engines": {
-	"node": "16.x"
+	"node": "^16.6.0"
   },
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "nodearcanusapilib": "0.1.2"
+    "nodearcanusapilib": "^0.1.2"
   },
   "devDependencies": {
     "eslint": "^7.29.0"
