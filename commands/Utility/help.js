@@ -37,6 +37,6 @@ module.exports = {
 			embed.description = 'Please check commands using `help` without parameters or provide correct command name.';
 		}
 
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	},
 };

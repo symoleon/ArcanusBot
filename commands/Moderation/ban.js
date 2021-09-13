@@ -25,7 +25,7 @@ module.exports = {
 					logEmbed.setDescription(`**Banned:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${banReason}`);
 					logEmbed.setThumbnail(member.user.avatarURL());
 
-					message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+					message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 				}
 			} catch (error) {
 				if (error.code == 10013) {
@@ -39,6 +39,6 @@ module.exports = {
 			messageEmbed.setTitle('Not enough arguments!');
 			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

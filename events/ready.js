@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'ready',
 	once: true,
-	execute(config, client) {
+	execute(loggedClient, config, client) {
 		console.log(`Logged as: ${client.user.tag}`);
 
 		config.botMention = `<@${client.user.id}>`;

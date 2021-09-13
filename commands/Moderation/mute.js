@@ -50,7 +50,7 @@ module.exports = {
 							logEmbed.setThumbnail(member.user.avatarURL());
 							logEmbed.setFooter(`Duration: ${durationReadable}`);
 
-							message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+							message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 						}
 						messageEmbed.setTitle('Muted!');
 						messageEmbed.setDescription(`Muted user \`${member.user.username}\` for \`${muteDescription}\`\nDuration: \`${durationReadable}\``);
@@ -74,6 +74,6 @@ module.exports = {
 			messageEmbed.setTitle('Not enough arguments!');
 			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

@@ -10,7 +10,8 @@ module.exports = {
 				const arcanusGuild = await client.arcanusClient.guilds.fetch(mute.guild_id);
 				await arcanusGuild.mutesManager.delete(mute.id);
 				try {
-					const guild = await client.guilds.fetch(arcanusGuild.id);
+					const partialGuild = await client.guilds.fetch({ guild: arcanusGuild.id }).first();
+					const guild = await partialGuild.fetch();
 					const member = await guild.members.fetch(mute.user_id.toString());
 					await member.roles.remove(arcanusGuild.mute_role_id.toString());
 					if (guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
@@ -19,7 +20,7 @@ module.exports = {
 						logEmbed.setDescription(`**Unmuted:** ${member.user.username}#${member.user.discriminator} (${member.user.id})\n**Reason:** Mute expired!`);
 						logEmbed.setThumbnail(member.user.avatarURL());
 
-						guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+						guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 					}
 				} catch (error) {
 					console.error(error);

@@ -7,6 +7,6 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	execute(message) {
-		message.reply(`pong! ${message.client.ws.ping}ms`);
+		message.reply(`Pong! ${message.client.ws.ping}ms`);
 	},
 };

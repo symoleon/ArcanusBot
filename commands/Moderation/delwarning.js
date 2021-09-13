@@ -26,7 +26,7 @@ module.exports = {
 						logEmbed.setDescription(`**Deleted warning:** ${warning.description} (${warning.id})\n**From:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!`);
 						logEmbed.setThumbnail(member.user.avatarURL());
 
-						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 					}
 					messageEmbed.setTitle('Warning deleted!');
 					messageEmbed.setDescription(`Warning with ID \`${warningId}\` has been deleted!`);
@@ -46,6 +46,6 @@ module.exports = {
 			messageEmbed.setTitle('Not enough arguments!');
 			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

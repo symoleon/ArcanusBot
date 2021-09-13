@@ -34,6 +34,6 @@ module.exports = {
 			}
 		}
 
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

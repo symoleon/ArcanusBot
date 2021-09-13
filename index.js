@@ -5,7 +5,18 @@ const Discord = require('discord.js');
 const Arcanus = require('nodearcanusapilib');
 const config = require('./config.json');
 
-const client = new Discord.Client();
+const intents = [
+	Discord.Intents.FLAGS.GUILDS,
+	Discord.Intents.FLAGS.GUILD_MEMBERS,
+	Discord.Intents.FLAGS.GUILD_BANS,
+	Discord.Intents.FLAGS.GUILD_PRESENCES,
+	Discord.Intents.FLAGS.GUILD_MESSAGES,
+	Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+	Discord.Intents.FLAGS.DIRECT_MESSAGES,
+	Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+];
+
+const client = new Discord.Client({ intents: intents });
 client.arcanusClient = new Arcanus.APIClient('https://dev.symoleon.pl/arcanus/api', process.env.ARCANUS_TOKEN);
 client.commands = new Discord.Collection();
 
@@ -35,7 +46,7 @@ for (const file of eventFiles) {
 	}
 }
 
-client.setInterval(() => {
+setInterval(() => {
 	client.emit('botTick');
 }, 5000);
 

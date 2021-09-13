@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'message',
+	name: 'messageCreate',
 	once: false,
 	async execute(message, config, client) {
 		if (message.author.id == '302050872383242240' && message.embeds[0].description.match('Podbito serwer') != null) {
@@ -15,11 +15,11 @@ module.exports = {
 
 		if (!client.commands.has(command)) return;
 
-		if ((client.commands.get(command).guildOnly == true || client.commands.get(command).adminOnly == true) && (message.channel.type != 'text' && message.channel.type != 'news')) {
+		if ((client.commands.get(command).guildOnly == true || client.commands.get(command).adminOnly == true) && (message.channel.type != 'GUILD_TEXT' && message.channel.type != 'GUILD_NEWS')) {
 			const embed = new Discord.MessageEmbed();
 			embed.setTitle('This command is available only in guilds!');
 			embed.setDescription('To execute this command you must use it in guild\'s channel!');
-			message.channel.send(embed);
+			message.channel.send({ embeds: [embed] });
 			return;
 		}
 
@@ -32,7 +32,7 @@ module.exports = {
 					const embed = new Discord.MessageEmbed();
 					embed.setTitle('Insufficient permissions!');
 					embed.setDescription('You don\'t have permissions to execute this command!');
-					message.channel.send(embed);
+					message.channel.send({ embeds: [embed] });
 					return;
 				}
 			}
@@ -42,7 +42,7 @@ module.exports = {
 			const embed = new Discord.MessageEmbed();
 			embed.setTitle('Error');
 			embed.setDescription('There was an error during execution of this command!');
-			message.channel.send(embed);
+			message.channel.send({ embeds: [embed] });
 		}
 	},
 };

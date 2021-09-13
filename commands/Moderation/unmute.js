@@ -27,7 +27,7 @@ module.exports = {
 						logEmbed.setDescription(`**Unmuted:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${unmuteReason}`);
 						logEmbed.setThumbnail(member.user.avatarURL());
 
-						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 					}
 					messageEmbed.setTitle('Unmuted!');
 					messageEmbed.setDescription(`User \`${member.user.username}\` has been unmuted for \`${unmuteReason}\``);
@@ -47,6 +47,6 @@ module.exports = {
 			messageEmbed.setTitle('Not enough arguments!');
 			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

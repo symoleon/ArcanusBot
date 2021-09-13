@@ -24,7 +24,7 @@ module.exports = {
 					logEmbed.setDescription(`**Warned:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${warningDescription}`);
 					logEmbed.setThumbnail(member.user.avatarURL());
 
-					message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send(logEmbed);
+					message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 				}
 				messageEmbed.setTitle('Warned!');
 				messageEmbed.setDescription(`Warned user \`${member.user.username}\` for \`${warningDescription}\``);
@@ -40,6 +40,6 @@ module.exports = {
 			messageEmbed.setTitle('Not enough arguments!');
 			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send(messageEmbed);
+		message.channel.send({ embeds: [messageEmbed] });
 	},
 };

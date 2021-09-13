@@ -15,6 +15,6 @@ module.exports = {
 			minuta = '0' + minuta.toString();
 		}
 		const embed = new Discord.MessageEmbed().setDescription(`${client.user.username} predicts, that the next bump will be available after ${godzina}:${minuta}.`);
-		message.channel.send(embed);
+		message.channel.send({ embeds: [embed] });
 	},
 };
