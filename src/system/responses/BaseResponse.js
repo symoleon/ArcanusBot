@@ -1,18 +1,19 @@
-const { MessageEmbed } = require('discord.js');
-
 class BaseResponse {
-	constructor(text, title, color) {
-		this.text = text;
-		this.title = title;
-		this.color = color;
+	constructor(content, embeds) {
+		this.content = content;
+		this.embeds = embeds;
 	}
 
 	makeMessageObject() {
-		const embed = new MessageEmbed();
-		embed.setTitle(this.title);
-		embed.setDescription(this.text);
-		embed.setColor(this.color);
-		return { embeds: [embed] };
+		const object = {};
+		if (this.content) {
+			object.content = this.content;
+		}
+		if (this.embeds) {
+			object.embeds = this.embeds;
+		}
+
+		return object;
 	}
 }
 
