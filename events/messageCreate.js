@@ -4,7 +4,7 @@ module.exports = {
 	name: 'messageCreate',
 	once: false,
 	async execute(message, config, client) {
-		if (message.author.id == '302050872383242240' && message.embeds[0].description.match('Podbito serwer') != null) {
+		if (message.author.id == '302050872383242240' && ((message.embeds[0].description.match('Podbito serwer') != null) || (message.embeds[0].description.match('Bump done') != null))) {
 			client.emit('bump', message);
 		}
 		if (!(message.content.startsWith(config.botMention) || message.content.startsWith(config.prefix) || message.content.startsWith(config.botMentionWithExclamationMark)) || message.author.bot) return;
