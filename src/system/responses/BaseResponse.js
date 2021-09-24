@@ -5,7 +5,11 @@ class BaseResponse {
 	}
 
 	makeMessageObject() {
-		const object = {};
+		const object = {
+			allowedMentions: {
+				repliedUser: false,
+			},
+		};
 		if (this.content) {
 			object.content = this.content;
 		}
