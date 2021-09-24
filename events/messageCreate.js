@@ -36,7 +36,14 @@ module.exports = {
 					return;
 				}
 			}
-			await client.commands.get(command).execute(message, commandArguments);
+			const response = await client.commands.get(command).execute(message, commandArguments);
+			if (Array.isArray(response)) {
+				response.forEach(responseItem => {
+					message.reply(responseItem.makeMessageObject());
+				});
+			} else {
+				message.reply(response.makeMessageObject());
+			}
 		} catch (error) {
 			console.log(error);
 			const embed = new Discord.MessageEmbed();
