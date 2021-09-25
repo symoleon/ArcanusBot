@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'messageCreate',
@@ -46,10 +47,11 @@ module.exports = {
 			}
 		} catch (error) {
 			console.log(error);
-			const embed = new Discord.MessageEmbed();
-			embed.setTitle('Error');
-			embed.setDescription('There was an error during execution of this command!');
-			message.channel.send({ embeds: [embed] });
+			const response = new EmbedResponse();
+			response.setTitle('Error');
+			response.setText('There was an error during execution of this command!');
+			response.setType('ERROR');
+			message.channel.send(response.makeMessageObject());
 		}
 	},
 };

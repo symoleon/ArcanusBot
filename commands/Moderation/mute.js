@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'mute',
@@ -9,7 +10,8 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
+		response.setType('WARNING');
 		if (commandArguments.length >= 3) {
 			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			try {
@@ -52,28 +54,29 @@ module.exports = {
 
 							message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 						}
-						messageEmbed.setTitle('Muted!');
-						messageEmbed.setDescription(`Muted user \`${member.user.username}\` for \`${muteDescription}\`\nDuration: \`${durationReadable}\``);
+						response.setType('SUCCESS');
+						response.setTitle('Muted!');
+						response.setText(`Muted user \`${member.user.username}\` for \`${muteDescription}\`\nDuration: \`${durationReadable}\``);
 					} else {
-						messageEmbed.setTitle('Already muted!');
-						messageEmbed.setDescription(`User \`${member.user.username}\` is already muted!`);
+						response.setTitle('Already muted!');
+						response.setText(`User \`${member.user.username}\` is already muted!`);
 					}
 				} else {
-					messageEmbed.setTitle('Invalid duration!');
-					messageEmbed.setDescription(`Provided duration \`${providedDuration}\` is not valid!`);
+					response.setTitle('Invalid duration!');
+					response.setText(`Provided duration \`${providedDuration}\` is not valid!`);
 				}
 			} catch (error) {
 				if (error.code == 10013) {
-					messageEmbed.setTitle('Invalid user!');
-					messageEmbed.setDescription(`I can't find user with \`${memberResolvable}\` name or ID.`);
+					response.setTitle('Invalid user!');
+					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
 				} else {
 					throw error;
 				}
 			}
 		} else {
-			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
+			response.setTitle('Not enough arguments!');
+			response.setText(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send({ embeds: [messageEmbed] });
+		return response;
 	},
 };

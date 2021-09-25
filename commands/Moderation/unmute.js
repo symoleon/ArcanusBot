@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'unmute',
@@ -9,7 +10,8 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
+		response.setType('WARNING');
 		if (commandArguments.length >= 2) {
 			const userResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			try {
@@ -29,24 +31,25 @@ module.exports = {
 
 						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 					}
-					messageEmbed.setTitle('Unmuted!');
-					messageEmbed.setDescription(`User \`${member.user.username}\` has been unmuted for \`${unmuteReason}\``);
+					response.setType('SUCCESS');
+					response.setTitle('Unmuted!');
+					response.setText(`User \`${member.user.username}\` has been unmuted for \`${unmuteReason}\``);
 				} else {
-					messageEmbed.setTitle('Not muted!');
-					messageEmbed.setDescription(`User \`${member.user.username}\` is not muted!`);
+					response.setTitle('Not muted!');
+					response.setText(`User \`${member.user.username}\` is not muted!`);
 				}
 			} catch (error) {
 				if (error.code == 10013) {
-					messageEmbed.setTitle('Invalid user!');
-					messageEmbed.setDescription(`I can't find user with \`${userResolvable}\` name or ID.`);
+					response.setTitle('Invalid user!');
+					response.setText(`I can't find user with \`${userResolvable}\` name or ID.`);
 				} else {
 					throw error;
 				}
 			}
 		} else {
-			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
+			response.setTitle('Not enough arguments!');
+			response.setText(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send({ embeds: [messageEmbed] });
+		return response;
 	},
 };

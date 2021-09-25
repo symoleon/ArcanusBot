@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'delwarning',
@@ -9,7 +10,8 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
+		response.setType('WARNING');
 		if (commandArguments.length >= 2) {
 			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			try {
@@ -28,24 +30,25 @@ module.exports = {
 
 						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 					}
-					messageEmbed.setTitle('Warning deleted!');
-					messageEmbed.setDescription(`Warning with ID \`${warningId}\` has been deleted!`);
+					response.setType('SUCCESS');
+					response.setTitle('Warning deleted!');
+					response.setText(`Warning with ID \`${warningId}\` has been deleted!`);
 				} else {
-					messageEmbed.setTitle('Invalid warning ID!');
-					messageEmbed.setDescription(`User \`${member.user.id}\` don't have warn with id \`${warningId}\``);
+					response.setTitle('Invalid warning ID!');
+					response.setText(`User \`${member.user.id}\` don't have warn with id \`${warningId}\``);
 				}
 			} catch (error) {
 				if (error.code == 10013) {
-					messageEmbed.setTitle('Invalid user!');
-					messageEmbed.setDescription(`I can't find user with \`${memberResolvable}\` name or ID.`);
+					response.setTitle('Invalid user!');
+					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
 				} else {
 					throw error;
 				}
 			}
 		} else {
-			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
+			response.setTitle('Not enough arguments!');
+			response.setText(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send({ embeds: [messageEmbed] });
+		return response;
 	},
 };

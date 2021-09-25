@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'bump',
@@ -14,7 +15,7 @@ module.exports = {
 		if (minuta < 10) {
 			minuta = '0' + minuta.toString();
 		}
-		const embed = new Discord.MessageEmbed().setDescription(`${client.user.username} predicts, that the next bump will be available after ${godzina}:${minuta}.`);
-		message.channel.send({ embeds: [embed] });
+		const response = new EmbedResponse().setText(`${client.user.username} predicts, that the next bump will be available after ${godzina}:${minuta}.`);
+		message.channel.send(response.makeMessageObject());
 	},
 };
