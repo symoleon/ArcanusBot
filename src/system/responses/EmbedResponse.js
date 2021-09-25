@@ -6,6 +6,7 @@ class EmbedResponse extends BaseResponse {
 	constructor() {
 		super();
 		this.type = 'INFO';
+		this.title = '';
 		this.fields = [];
 	}
 
@@ -49,6 +50,7 @@ class EmbedResponse extends BaseResponse {
 	}
 	setType(type) {
 		this.type = type;
+		return this;
 	}
 }
 
