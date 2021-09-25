@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'kick',
@@ -9,15 +10,17 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
+		response.setType('WARNING');
 		if (commandArguments.length >= 2) {
 			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			try {
 				const member = await message.guild.members.fetch(memberResolvable);
 				const kickReason = commandArguments.join(' ');
 				await member.kick(kickReason);
-				messageEmbed.setTitle('Kicked!');
-				messageEmbed.setDescription(`Kicked user \`${member.user.username}\` for \`${kickReason}\``);
+				response.setType('SUCCESS');
+				response.setTitle('Kicked!');
+				response.setText(`Kicked user \`${member.user.username}\` for \`${kickReason}\``);
 				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
 				if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
 					const logEmbed = new Discord.MessageEmbed();
@@ -29,16 +32,16 @@ module.exports = {
 				}
 			} catch (error) {
 				if (error.code == 10013) {
-					messageEmbed.setTitle('Invalid user!');
-					messageEmbed.setDescription(`I can't find user with \`${memberResolvable}\` name or ID.`);
+					response.setTitle('Invalid user!');
+					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
 				} else {
 					throw error;
 				}
 			}
 		} else {
-			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
+			response.setTitle('Not enough arguments!');
+			response.setText(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send({ embeds: [messageEmbed] });
+		return response;
 	},
 };

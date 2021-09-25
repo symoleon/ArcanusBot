@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'unban',
@@ -9,15 +10,17 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
+		response.setType('WARNING');
 		if (commandArguments.length >= 2) {
 			const userResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			try {
 				const user = await message.client.users.fetch(userResolvable);
 				const unbanReason = commandArguments.join(' ');
 				await message.guild.members.unban(user, unbanReason);
-				messageEmbed.setTitle('Unbanned!');
-				messageEmbed.setDescription(`Unbanned user \`${user.username}\` for \`${unbanReason}\``);
+				response.setType('SUCCESS');
+				response.setTitle('Unbanned!');
+				response.setText(`Unbanned user \`${user.username}\` for \`${unbanReason}\``);
 				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
 				if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
 					const logEmbed = new Discord.MessageEmbed();
@@ -29,16 +32,16 @@ module.exports = {
 				}
 			} catch (error) {
 				if (error.code == 10013) {
-					messageEmbed.setTitle('Invalid user!');
-					messageEmbed.setDescription(`I can't find user with \`${userResolvable}\` name or ID.`);
+					response.setTitle('Invalid user!');
+					response.setText(`I can't find user with \`${userResolvable}\` name or ID.`);
 				} else {
 					throw error;
 				}
 			}
 		} else {
-			messageEmbed.setTitle('Not enough arguments!');
-			messageEmbed.setDescription(`Provide additional arguments or use \`help ${this.name}\` command.`);
+			response.setTitle('Not enough arguments!');
+			response.setText(`Provide additional arguments or use \`help ${this.name}\` command.`);
 		}
-		message.channel.send({ embeds: [messageEmbed] });
+		return response
 	},
 };
