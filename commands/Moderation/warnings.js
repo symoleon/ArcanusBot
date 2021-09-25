@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const EmbedResponse = require('../../src/system/responses/EmbedResponse');
 
 module.exports = {
 	name: 'warnings',
@@ -9,9 +10,9 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: false,
 	async execute(message, commandArguments) {
-		const messageEmbed = new Discord.MessageEmbed();
+		let response = new EmbedResponse();
+		response.setTitle('List of warnings');
 		let member = null;
-		messageEmbed.setTitle('List of warnings');
 		if (commandArguments[0] != undefined) {
 			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
 			member = await message.guild.members.fetch(memberResolvable);
@@ -25,15 +26,16 @@ module.exports = {
 		const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
 		const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
 		if (arcanusGuildMember.warningsManager.warningsIds.length == 0) {
-			messageEmbed.setDescription(`User \`${member.username}\` don't have any warnings!`);
+			response.setText(`User \`${member.username}\` don't have any warnings!`);
+			response.setType('SUCCESS');
 		} else {
-			messageEmbed.setDescription(`All \`${member.username}\`'s warnings`);
+			response.setText(`All \`${member.username}\`'s warnings`);
 			for (const warningId of arcanusGuildMember.warningsManager.warningsIds) {
 				const warning = await arcanusGuildMember.warningsManager.fetch(warningId);
-				messageEmbed.addField(`ID: ${warning.id}`, `${warning.description}\nWarned by <@${warning.mod_id}>`);
+				response.addField({ name: `ID: ${warning.id}`, value: `${warning.description}\nWarned by <@${warning.mod_id}>`, inline: false });
 			}
 		}
 
-		message.channel.send({ embeds: [messageEmbed] });
+		return response;
 	},
 };

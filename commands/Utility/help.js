@@ -1,3 +1,4 @@
+const EmbedResponse = require('./../../src/system/responses/EmbedResponse');
 const Discord = require('discord.js');
 const config = require('../../config.json');
 module.exports = {
@@ -9,12 +10,12 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	execute(message, commandArguments) {
-		const embed = new Discord.MessageEmbed();
+		const response = new EmbedResponse();
 		const { commands } = message.client;
 
 		if (!commandArguments.length) {
-			embed.title = 'List of commands';
-			embed.description = `To run command use server prefix with is \`${config.prefix}\` or just mention me!`;
+			response.setTitle('List of commands');
+			response.setText(`To run command use server prefix with is \`${config.prefix}\` or just mention me!`);
 			const commandsStrings = new Discord.Collection();
 			commands.forEach((value, key) => {
 				if (!commandsStrings.has(value.category)) {
@@ -24,19 +25,20 @@ module.exports = {
 				}
 			});
 			commandsStrings.forEach((value, key) => {
-				embed.fields.push({ 'name': key, 'value': value, 'inline': true });
+				response.addField({ name: key, value: value, inline: true });
 			});
 		} else if (commands.has(commandArguments[0])) {
 			const command = commands.get(commandArguments[0]);
-			embed.title = `Help of the \`${command.name}\` command`;
-			embed.description = `
+			response.setTitle(`Help of the \`${command.name}\` command`);
+			response.setText(`
 			Description: ${command.description}
-			Usage: ${command.name} ${command.usage}`;
+			Usage: ${command.name} ${command.usage}`);
 		} else {
-			embed.title = 'No command with that name!';
-			embed.description = 'Please check commands using `help` without parameters or provide correct command name.';
+			response.setType('WARNING');
+			response.setTitle('No command with that name!');
+			response.setText('Please check commands using `help` without parameters or provide correct command name.');
 		}
 
-		message.channel.send({ embeds: [embed] });
+		return response;
 	},
 };

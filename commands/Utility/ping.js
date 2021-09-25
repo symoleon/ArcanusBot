@@ -1,3 +1,5 @@
+const BaseResponse = require('../../src/system/responses/BaseResponse');
+
 module.exports = {
 	name: 'ping',
 	category: 'Utility',
@@ -7,6 +9,6 @@ module.exports = {
 	guildOnly: false,
 	adminOnly: false,
 	execute(message) {
-		message.reply(`Pong! ${message.client.ws.ping}ms`);
+		return new BaseResponse(`Pong! ${message.client.ws.ping}ms`);
 	},
 };
