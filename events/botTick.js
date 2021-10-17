@@ -10,7 +10,7 @@ module.exports = {
 				const arcanusGuild = await client.arcanusClient.guilds.fetch(mute.guild_id);
 				await arcanusGuild.mutesManager.delete(mute.id);
 				try {
-					const partialGuild = await client.guilds.fetch({ guild: arcanusGuild.id }).first();
+					const partialGuild = (await client.guilds.fetch({ guild: arcanusGuild.id })).first();
 					const guild = await partialGuild.fetch();
 					const member = await guild.members.fetch(mute.user_id.toString());
 					await member.roles.remove(arcanusGuild.mute_role_id.toString());
