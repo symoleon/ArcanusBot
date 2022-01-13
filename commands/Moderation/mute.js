@@ -40,18 +40,23 @@ module.exports = {
 				if (!isNaN(durationInSeconds)) {
 					const muteDescription = commandArguments.join(' ');
 					const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
-					const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
-					if (!arcanusGuildMember.muteId) {
-						await arcanusGuild.mutesManager.mute(arcanusGuildMember, message.author.id, muteDescription, durationInSeconds);
-						const role = await message.guild.roles.fetch(arcanusGuild.mute_role_id.toString());
-						await member.roles.add(role);
+					// const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
+					if (!member.isCommunicationDisabled()) {
+						// await arcanusGuild.mutesManager.mute(arcanusGuildMember, message.author.id, muteDescription, durationInSeconds);
+						// const role = await message.guild.roles.fetch(arcanusGuild.mute_role_id.toString());
+						// await member.roles.add(role);
+						await member.timeout(durationInSeconds*1000, muteDescription);
 						if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
 							const logEmbed = new Discord.MessageEmbed();
-							logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
+							logEmbed.setAuthor({
+								name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
+								iconURL: message.author.avatarURL(), 
+							});
 							logEmbed.setDescription(`**Muted:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${muteDescription}`);
 							logEmbed.setThumbnail(member.user.avatarURL());
-							logEmbed.setFooter(`Duration: ${durationReadable}`);
-
+							logEmbed.setFooter({
+								text: `Duration: ${durationReadable}`,
+							});
 							message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
 						}
 						response.setType('SUCCESS');
