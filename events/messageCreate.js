@@ -46,11 +46,16 @@ module.exports = {
 				message.reply(response.makeMessageObject());
 			}
 		} catch (error) {
-			console.log(error);
 			const response = new EmbedResponse();
-			response.setTitle('Error');
-			response.setText('There was an error during execution of this command!');
 			response.setType('ERROR');
+			if (error.code == 50013) {
+				response.setTitle('No permissions');
+				response.setText('I can\'t do that! I\'m lack permissions!')
+			} else {
+				console.log(error);
+				response.setTitle('Error');
+				response.setText('There was an error during execution of this command!');
+			}
 			message.channel.send(response.makeMessageObject());
 		}
 	},
