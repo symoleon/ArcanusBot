@@ -17,14 +17,14 @@ module.exports = {
 			try {
 				const member = await message.guild.members.fetch(userResolvable);
 				const unmuteReason = commandArguments.join(' ');
-				const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
+				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
 				// const arcanusGuildMember = await arcanusGuild.getMember(member.id);
 				if (member.isCommunicationDisabled()) {
 					// await arcanusGuild.mutesManager.delete(arcanusGuildMember.muteId);
 					// const role = await message.guild.roles.fetch(arcanusGuild.mute_role_id.toString());
 					// await member.roles.remove(role);
 					await member.timeout(null, unmuteReason);
-					if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
+					if (message.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
 						const logEmbed = new Discord.MessageEmbed();
 						logEmbed.setAuthor({
 							name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
@@ -33,7 +33,7 @@ module.exports = {
 						logEmbed.setDescription(`**Unmuted:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${unmuteReason}`);
 						logEmbed.setThumbnail(member.user.avatarURL());
 
-						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
+						message.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
 					}
 					response.setType('SUCCESS');
 					response.setTitle('Unmuted!');
