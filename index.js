@@ -50,4 +50,17 @@ setInterval(() => {
 	client.emit('botTick');
 }, 5000);
 
+process.on('SIGTERM', async code => {
+	try {
+		await client.arcanusClient.Close();
+		console.log(`\nSuccessfuly closed db connection and exited with code: ${code}`);
+		process.exit();
+	} catch (error) {
+		console.log(error);
+	}
+});
+process.on('SIGINT', () => {
+	process.emit('SIGTERM', 'SIGINT');
+})
+
 client.login(process.env.TOKEN);
