@@ -9,9 +9,10 @@
   "author": "",
   "license": "ISC",
   "engines": {
-	"node": "^16.6.0"
+    "node": "^16.6.0"
   },
   "dependencies": {
+    "arcanusjs": "^1.0.0",
     "discord.js": "^13.5.1",
     "dotenv": "^10.0.0",
     "nodearcanusapilib": "^0.1.2"
