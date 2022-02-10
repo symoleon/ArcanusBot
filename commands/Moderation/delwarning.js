@@ -14,33 +14,30 @@ module.exports = {
 		response.setType('WARNING');
 		if (commandArguments.length >= 2) {
 			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
+			const warningId = commandArguments.shift();
 			try {
 				const member = await message.guild.members.fetch(memberResolvable);
-				const warningId = commandArguments.shift();
-				const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
-				const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
-				if (arcanusGuildMember.warningsManager.warningsIds.indexOf(warningId) != -1) {
-					const warning = await arcanusGuildMember.warningsManager.fetch(warningId);
-					await arcanusGuildMember.warningsManager.delete(warningId);
-					if (message.guild.channels.cache.has(arcanusGuild.mod_log_channel.toString())) {
-						const logEmbed = new Discord.MessageEmbed();
-						logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
-						logEmbed.setDescription(`**Deleted warning:** ${warning.description} (${warning.id})\n**From:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!`);
-						logEmbed.setThumbnail(member.user.avatarURL());
+				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
+				const warning = await arcanusGuild.warnings.fetch(warningId);
+				await warning.delete(warningId);
+				if (message.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
+					const logEmbed = new Discord.MessageEmbed();
+					logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
+					logEmbed.setDescription(`**Deleted warning:** ${warning.reason} (${warning.id})\n**From:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!`);
+					logEmbed.setThumbnail(member.user.avatarURL());
 
-						message.guild.channels.cache.get(arcanusGuild.mod_log_channel.toString()).send({ embeds: [logEmbed] });
-					}
-					response.setType('SUCCESS');
-					response.setTitle('Warning deleted!');
-					response.setText(`Warning with ID \`${warningId}\` has been deleted!`);
-				} else {
-					response.setTitle('Invalid warning ID!');
-					response.setText(`User \`${member.user.id}\` don't have warn with id \`${warningId}\``);
+					message.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
 				}
+				response.setType('SUCCESS');
+				response.setTitle('Warning deleted!');
+				response.setText(`Warning with ID \`${warningId}\` has been deleted!`);
 			} catch (error) {
 				if (error.code == 10013) {
 					response.setTitle('Invalid user!');
 					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
+				} else if (error.code == 1002) {
+					response.setTitle('Invalid warning ID!');
+					response.setText(`I can't find warning with id: \`${warningId}\``);
 				} else {
 					throw error;
 				}
