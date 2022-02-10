@@ -27,9 +27,15 @@ module.exports = {
 		try {
 			if (client.commands.get(command).adminOnly == true) {
 				const arcanusGuild = await client.arcanusClient.guilds.fetch(message.guild.id);
-				if (!arcanusGuild.admins.some(role => {
-					return message.member.roles.cache.has(role.toString());
-				})) {
+				let hasAdminRole = false;
+				for (const element of message.member.roles.cache) {
+					const isAdmin = await arcanusGuild.isAdmin(element[1].id);
+					if (isAdmin) {
+						hasAdminRole = true;
+						break;
+					}
+				}
+				if (!hasAdminRole) {
 					const embed = new Discord.MessageEmbed();
 					embed.setTitle('Insufficient permissions!');
 					embed.setDescription('You don\'t have permissions to execute this command!');
