@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs');
 const Discord = require('discord.js');
-const Arcanus = require('nodearcanusapilib');
+const { ArcanusClient } = require('arcanusjs');
 const config = require('./config.json');
 
 const intents = [
@@ -17,7 +17,7 @@ const intents = [
 ];
 
 const client = new Discord.Client({ intents: intents });
-client.arcanusClient = new Arcanus.APIClient('https://dev.symoleon.pl/arcanus/api', process.env.ARCANUS_TOKEN);
+client.arcanusClient = new ArcanusClient(process.env.ARCANUS_LOGIN, process.env.ARCANUS_PASSWORD, process.env.ARCANUS_DB);
 client.commands = new Discord.Collection();
 
 const commandCategories = fs.readdirSync('./commands', { withFileTypes: true }).filter(file => file.isDirectory());
