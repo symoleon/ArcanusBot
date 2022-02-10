@@ -23,16 +23,16 @@ module.exports = {
 			member = message.author;
 		}
 
-		const arcanusGuild = await message.client.arcanusClient.getGuild(message.guild.id);
-		const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
-		if (arcanusGuildMember.warningsManager.warningsIds.length == 0) {
+		const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
+		const warningsIds = await arcanusGuild.warnings.fetchMemberWarnings(member.id);
+		if (warningsIds.length === 0) {
 			response.setText(`User \`${member.username}\` don't have any warnings!`);
 			response.setType('SUCCESS');
 		} else {
 			response.setText(`All \`${member.username}\`'s warnings`);
-			for (const warningId of arcanusGuildMember.warningsManager.warningsIds) {
-				const warning = await arcanusGuildMember.warningsManager.fetch(warningId);
-				response.addField({ name: `ID: ${warning.id}`, value: `${warning.description}\nWarned by <@${warning.mod_id}>`, inline: false });
+			for (const id of warningsIds) {
+				const warning = await arcanusGuild.warnings.fetch(id);
+				response.addField({ name: `ID: ${warning.id}`, value: `${warning.reason}\nWarned by <@${warning.modId}>`, inline: false });
 			}
 		}
 
