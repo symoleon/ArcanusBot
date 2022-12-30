@@ -9,23 +9,25 @@ module.exports = {
 	permission: '',
 	guildOnly: true,
 	adminOnly: true,
-	async execute(message, commandArguments) {
+	async execute(interaction) {
 		const response = new EmbedResponse();
 		response.setType('WARNING');
-		if (commandArguments.length >= 2) {
-			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
+		if (interaction.options.data.length >= 2) {
 			try {
-				const member = await message.guild.members.fetch(memberResolvable);
-				const warningDescription = commandArguments.join(' ');
-				const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
-				await arcanusGuild.warnings.create(member.id, message.author.id, warningDescription);
-				if (message.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
-					const logEmbed = new Discord.MessageEmbed();
-					logEmbed.setAuthor(`${message.author.username}#${message.author.discriminator} (${message.author.id})`, message.author.avatarURL());
+				const member = interaction.options.getMember('user');
+				const warningDescription = interaction.options.getString('description');
+				const arcanusGuild = await interaction.client.arcanusClient.guilds.fetch(interaction.guild.id);
+				await arcanusGuild.warnings.create(member.id, interaction.user.id, warningDescription);
+				if (interaction.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
+					const logEmbed = new Discord.EmbedBuilder();
+					logEmbed.setAuthor({
+						name: `${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`,
+						iconURL: interaction.user.displayAvatarURL(),
+					});
 					logEmbed.setDescription(`**Warned:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${warningDescription}`);
-					logEmbed.setThumbnail(member.user.avatarURL());
+					logEmbed.setThumbnail(member.user.displayAvatarURL());
 
-					message.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
+					interaction.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
 				}
 				response.setType('SUCCESS')
 				response.setTitle('Warned!');
@@ -33,7 +35,7 @@ module.exports = {
 			} catch (error) {
 				if (error.code == 10013) {
 					response.setTitle('Invalid user!');
-					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
+					response.setText(`I can't find that user.`);
 				} else {
 					throw error;
 				}

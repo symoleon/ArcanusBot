@@ -9,14 +9,13 @@ module.exports = {
 	permission: '',
 	guildOnly: true,
 	adminOnly: true,
-	async execute(message, commandArguments) {
+	async execute(interaction) {
 		const response = new EmbedResponse();
 		response.setType('WARNING');
-		if (commandArguments.length >= 3) {
-			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
+		if (interaction.options.data.length >= 3) {
 			try {
-				const member = await message.guild.members.fetch(memberResolvable);
-				const providedDuration = commandArguments.shift();
+				const member = interaction.options.getMember('user');
+				const providedDuration = interaction.options.getString('duration');
 				let durationInSeconds = 0;
 				let durationReadable = '';
 				switch (providedDuration.at(-1)) {
@@ -38,26 +37,26 @@ module.exports = {
 					break;
 				}
 				if (!isNaN(durationInSeconds)) {
-					const muteDescription = commandArguments.join(' ');
-					const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
+					const muteDescription = interaction.options.getString('description');
+					const arcanusGuild = await interaction.client.arcanusClient.guilds.fetch(interaction.guild.id);
 					// const arcanusGuildMember = await message.client.arcanusClient.getGuildMember(arcanusGuild, member.id);
 					if (!member.isCommunicationDisabled()) {
-						// await arcanusGuild.mutesManager.mute(arcanusGuildMember, message.author.id, muteDescription, durationInSeconds);
+						// await arcanusGuild.mutesManager.mute(arcanusGuildMember, interaction.user.id, muteDescription, durationInSeconds);
 						// const role = await message.guild.roles.fetch(arcanusGuild.mute_role_id.toString());
 						// await member.roles.add(role);
 						await member.timeout(durationInSeconds*1000, muteDescription);
-						if (message.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
-							const logEmbed = new Discord.MessageEmbed();
+						if (interaction.guild.channels.cache.has(arcanusGuild.modLogChannel.toString())) {
+							const logEmbed = new Discord.EmbedBuilder();
 							logEmbed.setAuthor({
-								name: `${message.author.username}#${message.author.discriminator} (${message.author.id})`,
-								iconURL: message.author.avatarURL(), 
+								name: `${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`,
+								iconURL: interaction.user.displayAvatarURL(), 
 							});
 							logEmbed.setDescription(`**Muted:** ${member.user.username}#${member.user.discriminator} (${member.user.id})!\n**Reason:** ${muteDescription}`);
-							logEmbed.setThumbnail(member.user.avatarURL());
+							logEmbed.setThumbnail(member.user.displayAvatarURL());
 							logEmbed.setFooter({
 								text: `Duration: ${durationReadable}`,
 							});
-							message.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
+							interaction.guild.channels.cache.get(arcanusGuild.modLogChannel.toString()).send({ embeds: [logEmbed] });
 						}
 						response.setType('SUCCESS');
 						response.setTitle('Muted!');
@@ -73,7 +72,7 @@ module.exports = {
 			} catch (error) {
 				if (error.code == 10013) {
 					response.setTitle('Invalid user!');
-					response.setText(`I can't find user with \`${memberResolvable}\` name or ID.`);
+					response.setText(`I can't find that user.`);
 				} else {
 					throw error;
 				}

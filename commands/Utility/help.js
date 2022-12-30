@@ -7,15 +7,16 @@ module.exports = {
 	description: 'Send a help message about all or only one command.',
 	usage: '[command name]',
 	permissions: '',
+	ephemeral: true,
 	guildOnly: false,
 	adminOnly: false,
-	execute(message, commandArguments) {
+	execute(interaction) {
 		const response = new EmbedResponse();
-		const { commands } = message.client;
+		const { commands } = interaction.client;
 
-		if (!commandArguments.length) {
+		if (!interaction.options.data.length) {
 			response.setTitle('List of commands');
-			response.setText(`To run command use server prefix with is \`${config.prefix}\` or just mention me!`);
+			response.setText(`To run command use slash commands! We won't support old message commands, sorry.`);
 			const commandsStrings = new Discord.Collection();
 			commands.forEach((value, key) => {
 				if (!commandsStrings.has(value.category)) {
@@ -27,8 +28,8 @@ module.exports = {
 			commandsStrings.forEach((value, key) => {
 				response.addField({ name: key, value: value, inline: true });
 			});
-		} else if (commands.has(commandArguments[0])) {
-			const command = commands.get(commandArguments[0]);
+		} else if (commands.has(interaction.options.getString('command_name'))) {
+			const command = commands.get(interaction.options.getString('command_name'));
 			response.setTitle(`Help of the \`${command.name}\` command`);
 			response.setText(`
 			Description: ${command.description}

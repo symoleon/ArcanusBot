@@ -1,5 +1,5 @@
 const BaseResponse = require('./BaseResponse');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 class EmbedResponse extends BaseResponse {
 
@@ -11,7 +11,7 @@ class EmbedResponse extends BaseResponse {
 	}
 
 	makeMessageObject() {
-		const embed = new MessageEmbed();
+		const embed = new EmbedBuilder();
 		embed.setDescription(this.text);
 		embed.setTitle(this.title);
 		switch (this.type) {

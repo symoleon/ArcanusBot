@@ -9,21 +9,17 @@ module.exports = {
 	permissions: '',
 	guildOnly: true,
 	adminOnly: false,
-	async execute(message, commandArguments) {
+	async execute(interaction) {
 		let response = new EmbedResponse();
 		response.setTitle('List of warnings');
-		let member = null;
-		if (commandArguments[0] != undefined) {
-			const memberResolvable = commandArguments.shift().replace(/<|>|@|!/g, '');
-			member = await message.guild.members.fetch(memberResolvable);
-		}
+		let member = interaction.options.getMember('user');
 		if (member != null) {
 			member = member.user;
 		} else {
-			member = message.author;
+			member = interaction.user;
 		}
 
-		const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id);
+		const arcanusGuild = await interaction.client.arcanusClient.guilds.fetch(interaction.guild.id);
 		const warningsIds = await arcanusGuild.warnings.fetchMemberWarnings(member.id);
 		if (warningsIds.length === 0) {
 			response.setText(`User \`${member.username}\` don't have any warnings!`);

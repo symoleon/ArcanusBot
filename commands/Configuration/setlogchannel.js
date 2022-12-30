@@ -8,14 +8,18 @@ module.exports = {
     permissions: '',
     guildOnly: true,
     adminOnly: true,
-    async execute(message, commandArguments) {
+    async execute(interaction) {
         const response = new EmbedResponse();
         response.setType('WARNING');
-        if (commandArguments.length >= 1) {
-            const channelResolvable = commandArguments.shift().replace(/<|>|#|!/g, '');
+        if (interaction.options.data.length >= 1) {
             try {
-                const channel = await message.guild.channels.fetch(channelResolvable);
-                const arcanusGuild = await message.client.arcanusClient.guilds.fetch(message.guild.id.toString());
+                const channel = interaction.options.getChannel('channel');
+                const arcanusGuild = await interaction.client.arcanusClient.guilds.fetch(interaction.guild.id.toString());
+                if (channel.isTextBased() == false) {
+                    response.setTitle('Invalid channel!');
+                    response.setText(`Channel \`${channel.name}\` is not text based.`);
+                    return response;
+                }
                 await arcanusGuild.setModLogChannel(channel.id.toString());
                 response.setType('SUCCESS');
                 response.setTitle('Succesfully updated!');
@@ -23,7 +27,7 @@ module.exports = {
             } catch (error) {
                 if (error.code == 10003) {
                     response.setTitle('Unknown channel');
-                    response.setText(`I can't find channel with id \`${channelResolvable}\`.`);
+                    response.setText(`I can't find that channel.`);
                 } else {
                     throw error;
                 }

@@ -6,9 +6,10 @@ module.exports = {
 	description: 'Ping!',
 	usage: '',
 	permission: '',
+	ephemeral: false,
 	guildOnly: false,
 	adminOnly: false,
-	execute(message) {
-		return new BaseResponse(`Pong! ${message.client.ws.ping}ms`);
+	execute(interaction) {
+		return new BaseResponse(`Pong! ${interaction.client.ws.ping}ms`);
 	},
 };

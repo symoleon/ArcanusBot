@@ -6,14 +6,14 @@ const { ArcanusClient } = require('arcanusjs');
 const config = require('./config.json');
 
 const intents = [
-	Discord.Intents.FLAGS.GUILDS,
-	Discord.Intents.FLAGS.GUILD_MEMBERS,
-	Discord.Intents.FLAGS.GUILD_BANS,
-	Discord.Intents.FLAGS.GUILD_PRESENCES,
-	Discord.Intents.FLAGS.GUILD_MESSAGES,
-	Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-	Discord.Intents.FLAGS.DIRECT_MESSAGES,
-	Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+	Discord.GatewayIntentBits.Guilds,
+	Discord.GatewayIntentBits.GuildMembers,
+	Discord.GatewayIntentBits.GuildBans,
+	Discord.GatewayIntentBits.GuildMembers,
+	Discord.GatewayIntentBits.GuildMessages,
+	Discord.GatewayIntentBits.GuildMessageReactions,
+	Discord.GatewayIntentBits.DirectMessages,
+	Discord.GatewayIntentBits.DirectMessageReactions,
 ];
 
 const client = new Discord.Client({ intents: intents });
